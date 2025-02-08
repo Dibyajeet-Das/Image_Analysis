@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.dibyajeet.Image_Analysis.ImageAnalysisApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.075 s -- in com.dibyajeet.Image_Analysis.ImageAnalysisApplicationTests

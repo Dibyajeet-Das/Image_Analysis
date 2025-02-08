@@ -1,0 +1,13 @@
+Web App
+Languages used to Build
+
+Frontend:-> 
+          *HTML
+          *CSS
+          *JAVASCRIPT
+
+Backend:->
+          *SpringBoot
+
+Cloud Services:->
+          *Microsoft Azure(For Applying Ai Services)

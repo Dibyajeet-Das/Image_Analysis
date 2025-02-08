@@ -1,0 +1,5 @@
+azure:
+  cognitive-services:
+    vision:
+      subscriptionKey: 8b6bBsxB70huMDxY1ktVrICHNoVsHtxWMNoQ6b7zObtvqvuPMDRLJQQJ99BAACYeBjFXJ3w3AAAEACOGLtwe
+      endpoint: https://dtcdelhiai001.cognitiveservices.azure.com/

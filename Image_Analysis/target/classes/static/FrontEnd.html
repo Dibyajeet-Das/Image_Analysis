@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexible Image Analysis</title>
+    <style>
+        /* General Styles */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Poppins', sans-serif;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+          background-size: 400% 400%;
+          animation: neonGlow 10s infinite;
+          color: #fff;
+          overflow-y: auto;
+        }
+
+        @keyframes neonGlow {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+
+        h2, p {
+          margin: 0;
+        }
+
+        header {
+          width: 100%;
+          padding: 20px;
+          background: rgba(0, 0, 0, 0.8);
+          text-align: center;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+          position: relative;
+        }
+
+        header h1 {
+          font-size: 2.5em;
+          margin-bottom: 10px;
+          color: #00d4ff;
+          text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+        }
+
+        header p {
+          font-size: 1.2em;
+          color: #fff;
+        }
+
+        .menu-button {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          background-color: #00d4ff;
+          color: black;
+          border: none;
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          cursor: pointer;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          z-index: 3;
+        }
+
+        .menu-button:hover {
+          transform: scale(1.1);
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .container {
+          width: 90%;
+          max-width: 600px;
+          background: rgba(0, 0, 0, 0.8);
+          border: 1px solid #00d4ff;
+          border-radius: 16px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+          padding: 20px;
+          text-align: center;
+          color: #fff;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          margin: 20px auto;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .container:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 12px 36px rgba(0, 0, 0, 0.9);
+        }
+
+        .upload-area {
+          border: 2px dashed #00d4ff;
+          padding: 30px;
+          border-radius: 12px;
+          cursor: pointer;
+          margin-top: 20px;
+          transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s ease;
+        }
+
+        .upload-area:hover {
+          background: rgba(0, 0, 0, 0.6);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-area.drag-over {
+          background: rgba(0, 0, 0, 0.8);
+          border-color: #00d4ff;
+          box-shadow: 0 0 10px #00d4ff, inset 0 0 10px #00d4ff;
+        }
+
+        img {
+          max-width: 100%;
+          margin: 20px 0; /* Add spacing around the image */
+          border-radius: 12px;
+          box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+          display: none;
+        }
+
+        button {
+          width: 80%;
+          margin: 20px auto;
+          padding: 12px 20px;
+          background: linear-gradient(90deg, #00d4ff, #0f0c29);
+          color: black;
+          font-size: 16px;
+          font-weight: bold;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          display: block;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        button:disabled {
+          background: #555;
+          cursor: not-allowed;
+          box-shadow: none;
+        }
+
+        button:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        #result {
+          margin: 20px 0;
+          padding: 15px;
+          background: rgba(0, 0, 0, 0.8);
+          border: 1px solid #00d4ff;
+          border-radius: 10px;
+          text-align: center;
+          color: #fff;
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+          display: none; /* Initially hidden */
+          width: 100%; /* Ensures it stretches to container width */
+        }
+
+        #result h4 {
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+
+        footer {
+          width: 100%;
+          padding: 20px;
+          background: rgba(0, 0, 0, 0.8);
+          text-align: center;
+          box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.7);
+          margin-top: auto;
+        }
+
+        footer p {
+          font-size: 12px;
+          color: #fff;
+        }
+
+        footer a {
+          color: #00d4ff;
+          text-decoration: none;
+          font-weight: bold;
+        }
+
+        footer a:hover {
+          text-decoration: underline;
+        }
+
+        /* Sliding Menu Styles */
+        .menu {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #333;
+          overflow-x: hidden;
+          transition: 0.5s;
+          padding-top: 60px;
+        }
+
+        .menu a {
+          padding: 8px 8px 8px 32px;
+          text-decoration: none;
+          font-size: 20px;
+          color: #fff;
+          display: block;
+          transition: 0.3s;
+        }
+
+        .menu a:hover {
+          color: #00d4ff;
+        }
+
+        .menu .close-btn {
+          position: absolute;
+          top: 0;
+          right: 25px;
+          font-size: 36px;
+          margin-left: 50px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <button class="menu-button" id="menuButton" onclick="openMenu()">☰</button>
+    <h1>Flexible Image Analysis</h1>
+    <p>Analyze your images with ease and get detailed results!</p>
+</header>
+<div class="container">
+    <h2>Image Analysis</h2>
+    <p>Drag and drop an image to analyze!</p>
+    <div id="upload-area" class="upload-area">
+        Drag & Drop an image here <br> or <br> Click to upload
+        <input type="file" id="file-input" accept="image/*" hidden>
+    </div>
+    <img id="image-preview" alt="Image Preview">
+    <button id="analyze-btn" disabled>Analyze Image</button>
+    <div id="result">
+        <h4>Analysis Results:</h4>
+        <p id="result-text">Processing...</p>
+    </div>
+</div>
+<footer>
+    <p>&copy; 2025 Flexible Image Analysis. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+</footer>
+
+<!-- Sliding Menu -->
+<div id="myMenu" class="menu">
+    <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()">&times;</a>
+    <a href="#">Dashboard</a>
+    <a href="#">Features</a>
+    <a href="#">Pricing</a>
+    <a href="#">Contact Us</a>
+    <a href="#">Team Members</a>
+</div>
+
+<script>
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('file-input');
+    const imagePreview = document.getElementById('image-preview');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const resultDiv = document.getElementById('result');
+    const resultText = document.getElementById('result-text');
+    const menuButton = document.getElementById('menuButton');
+
+    // Drag and Drop Events
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        previewImage(file);
+      }
+    });
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (file && file.type.startsWith('image/')) {
+        previewImage(file);
+      }
+    });
+
+    function previewImage(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        imagePreview.src = reader.result;
+        imagePreview.style.display = 'block';
+        analyzeBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    analyzeBtn.addEventListener('click', async () => {
+      resultDiv.style.display = 'block';
+      resultText.textContent = 'Analyzing... Please wait.';
+
+      const file = fileInput.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          const response = await fetch('/api/computer-vision/analyze', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (response.ok) {
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            imagePreview.src = imageUrl;
+
+            const caption = response.headers.get('X-Analysis-Caption');
+            const tags = response.headers.get('X-Analysis-Tags');
+            const objects = response.headers.get('X-Analysis-Objects');
+
+            resultText.innerHTML = `
+              <strong>Caption:</strong> ${caption}<br>
+              <strong>Tags:</strong> ${tags}<br>
+              <strong>Objects:</strong> ${objects}
+            `;
+          } else {
+            resultText.textContent = 'Error: ' + await response.text();
+          }
+        } catch (error) {
+          resultText.textContent = 'Error: ' + error.message;
+        }
+      }
+    });
+
+    // Sliding Menu Functions
+    function openMenu() {
+      document.getElementById("myMenu").style.width = "250px";
+      menuButton.style.display = 'none';
+    }
+
+    function closeMenu() {
+      document.getElementById("myMenu").style.width = "0";
+      menuButton.style.display = 'block';
+    }
+</script>
+</body>
+</html>
